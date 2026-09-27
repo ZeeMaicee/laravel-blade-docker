@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
     Uji dijalankan dengan SQLite in-memory supaya cepat dan tidak menyentuh
-    basis data MySQL milik container. Atribut force="true" memastikan nilai di
-    bawah ini menang atas variabel lingkungan yang di-set docker compose
-    (tanpa itu, DB_CONNECTION=mysql dari container akan dipakai dan uji bisa
-    menghapus isi basis data pengembangan).
+    basis data MySQL milik container.
+
+    PENTING: `force="true"` saja TIDAK cukup. Di dalam container, docker compose
+    mengirim APP_ENV=local dan DB_CONNECTION=mysql sebagai variabel lingkungan
+    sungguhan; Laravel membaca $_SERVER lebih dulu, sedangkan force="true" hanya
+    menulis $_ENV + putenv(). Karena itu nilai-nilai yang sama dipaksa ulang di
+    tests/TestCase.php (sebelum aplikasi di-boot), plus ada jaring pengaman yang
+    menolak berjalan kalau koneksinya bukan sqlite in-memory.
 -->
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd"

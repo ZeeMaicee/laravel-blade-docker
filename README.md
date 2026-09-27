@@ -73,7 +73,17 @@ docker compose exec app php artisan test
 ```
 
 Uji berjalan di **SQLite in-memory** (lihat `phpunit.xml`), jadi tidak menyentuh MySQL milik
-container dan tidak menghapus data pengembangan Anda. Berkas uji:
+container dan tidak menghapus data pengembangan Anda.
+
+Satu hal yang mudah menjebak: `<env force="true">` di `phpunit.xml` **saja tidak cukup**.
+Docker Compose mengirim `APP_ENV=local` dan `DB_CONNECTION=mysql` sebagai variabel lingkungan
+sungguhan, dan Laravel membaca `$_SERVER` lebih dulu — sementara `force="true"` hanya menulis
+`$_ENV` + `putenv()`. Tanpa penanganan, uji POST/PUT/DELETE akan gagal `419` (CSRF aktif) dan
+`RefreshDatabase` bisa **mengosongkan basis data MySQL pengembangan**. Karena itu
+`tests/TestCase.php` memaksa nilai uji ke ketiga saluran (`$_SERVER`, `$_ENV`, `putenv()`)
+sebelum aplikasi di-boot, lalu menolak berjalan kalau koneksinya bukan `sqlite` in-memory.
+
+Berkas uji:
 
 ```
 tests/Feature/BerandaTest.php     # halaman depan 200, bukan welcome bawaan, /up 200
