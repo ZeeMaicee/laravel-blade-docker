@@ -1,0 +1,14 @@
+@import 'tailwindcss';
+
+/* Kelas Tailwind yang dipakai view paginasi & view hasil kompilasi Blade
+   harus ikut dipindai, karena keduanya berada di luar resources/. */
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+
+@theme {
+    /* Tanpa berkas font eksternal — template ini sengaja tetap bisa di-build
+       tanpa koneksi internet. */
+    --font-sans: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue',
+        Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji';
+    --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', monospace;
+}
