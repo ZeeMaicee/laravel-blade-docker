@@ -116,6 +116,17 @@ docker compose exec db mysql -ularavel -p laravel
 docker compose logs -f app            # ikuti log aplikasi (termasuk log Vite)
 ```
 
+Container menjalankan `php artisan serve --host=0.0.0.0 --port=8000 --no-reload`.
+Flag `--no-reload` dipakai supaya `PHP_CLI_SERVER_WORKERS=4` benar-benar aktif — server
+bawaan PHP hanya melayani satu permintaan sekaligus kalau flag itu tidak dipakai, dan
+halaman + healthcheck + permintaan bersamaan akan saling mengantre. `--no-reload`
+**hanya** mematikan pemuatan ulang otomatis saat berkas `.env` berubah; perubahan kode
+tetap langsung terbaca. Karena itu, setelah mengubah `.env`:
+
+```sh
+docker compose restart app
+```
+
 ## 7. Catatan produksi (jujur)
 
 Container `app` menjalankan **`php artisan serve`**, yaitu server bawaan PHP. Itu **alat
