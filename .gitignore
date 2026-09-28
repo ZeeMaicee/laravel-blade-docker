@@ -1,8 +1,11 @@
 *.log
+*.sql
 .DS_Store
-.env
-.env.backup
-.env.production
+# Semua berkas .env dikunci, KECUALI contohnya. Pola lama menyebut .env satu-satu
+# (.env, .env.backup, .env.production), sehingga .env.local dan .env.testing —
+# justru yang paling sering lahir di mesin pengembang — tidak terlindungi.
+.env*
+!.env.example
 .phpactor.json
 .phpunit.result.cache
 /.codex
